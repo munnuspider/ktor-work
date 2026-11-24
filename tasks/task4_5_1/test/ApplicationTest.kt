@@ -21,4 +21,34 @@ class ApplicationTest : FreeSpec({
     }
 
     // Add more tests here
+    @Test
+    fun testRoot() = testApplication {
+        client.get("/").apply {
+            assertEquals(HttpStatusCode.OK, status)
+            assertEquals("Hello World!", bodyAsText())
+        }
+    }
+
+    @Test
+    fun testHelloWithName() = testApplication {
+        client.get("/hello/Joe").apply {
+            assertEquals(HttpStatusCode.OK, status)
+            assertEquals("Hello Joe!", bodyAsText())
+        }
+    }
+
+    @Test
+    fun testHelloWithDifferentName() = testApplication {
+        client.get("/hello/Alice").apply {
+            assertEquals(HttpStatusCode.OK, status)
+            assertEquals("Hello Alice!", bodyAsText())
+        }
+    }
+
+    @Test
+    fun testHelloMissingNameReturnsNotFound() = testApplication {
+        client.get("/hello").apply {
+            assertEquals(HttpStatusCode.NotFound, status)
+        }
+
 })
